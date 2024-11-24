@@ -214,6 +214,6 @@ void Server::stop()
     {
         running = false;
         close(server_fd);
-        std::cout << "Server shut down.\n";
     }
+    std::cout << "Server shut down.\n";
 }
