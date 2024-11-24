@@ -12,8 +12,9 @@
 #include <unistd.h>
 #include <unordered_map>
 
-const int MAX_EVENTS = 10;
-const int BUFFER_SIZE = 1024;
+constexpr int MAX_EVENTS = 10;
+constexpr int BUFFER_SIZE = 1024;
+constexpr const char* SERVER_IP = "0.0.0.0";
 
 class Server
 {

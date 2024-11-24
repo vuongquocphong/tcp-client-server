@@ -1,4 +1,6 @@
 #include "server.h"
+#include <arpa/inet.h>
+#include <asm-generic/socket.h>
 
 Server::Server(int port) : port(port), running(false), epoll_fd(-1)
 {
@@ -175,11 +177,20 @@ void Server::start()
         exit(EXIT_FAILURE);
     }
 
+    // Enable SO_REUSEADDR to reuse the address immediately
+    int opt = 1;
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)) == -1)
+    {
+        perror("setsockopt");
+        close(server_fd);
+        exit(EXIT_FAILURE);
+    }
+
     struct sockaddr_in server_addr
     {
     };
     server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);
     server_addr.sin_port = htons(port);
 
     if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)

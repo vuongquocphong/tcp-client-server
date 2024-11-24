@@ -1,4 +1,5 @@
 #include "client.h"
+#include <arpa/inet.h>
 
 Client::Client(const std::string &server_ip, int server_port)
     : server_ip(server_ip), server_port(server_port), socket_fd(-1), running(false), connected(false)
@@ -19,6 +20,7 @@ void Client::connect_to_server()
     struct sockaddr_in server_addr{};
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(server_port);
+    server_addr.sin_addr.s_addr = inet_addr(server_ip.c_str());
 
     if (inet_pton(AF_INET, server_ip.c_str(), &server_addr.sin_addr) <= 0)
     {
@@ -134,7 +136,6 @@ void Client::close_connection()
         communication_thread.join();
     }
     std::cout << "Disconnected from server.\n";
-    std::cout << "Client exited successfully.\n";
 }
 
 void Client::start()
