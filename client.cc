@@ -82,7 +82,7 @@ void Client::communication_loop()
         if (bytes_received > 0)
         {
             buffer[bytes_received] = '\0';
-            std::cout << "Server: " << buffer << "\n";
+            std::cout << "Received: " << buffer << "\n";
         }
         else if (bytes_received == 0)
         {
@@ -107,7 +107,7 @@ void Client::send_message(const std::string &message)
     // Attempt to reconnect if not connected
     if (!connected)
     {
-        std::cout << "Not connected to server. Attempting to reconnect...\n";
+        std::cout << "Not connected to server.\n";
         reconnect_to_server();
         if (!connected)
         {
@@ -130,12 +130,12 @@ void Client::close_connection()
     {
         close(socket_fd);
         socket_fd = -1;
+        std::cout << "Disconnected from server.\n";
     }
     if (communication_thread.joinable())
     {
         communication_thread.join();
     }
-    std::cout << "Disconnected from server.\n";
 }
 
 void Client::start()
@@ -152,7 +152,6 @@ void Client::start()
     while (running)
     {
         std::string input;
-        std::cout << "You: ";
         std::getline(std::cin, input);
 
         if (input == "exit")
